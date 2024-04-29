@@ -1,0 +1,31 @@
+services:
+  webserver:
+    container_name: aluguel-carros
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./www:/var/www/html
+    ports:
+      - 8004:80
+    depends_on:
+      - mysql-db
+
+  mysql-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: veiculos
+      MYSQL_DATABASE: veiculos
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3307:3307"
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - mysql-db
+    ports:
+      - "8082:80"
+    environment:
+      PMA_HOST: mysql-db
+      MYSQL_ROOT_PASSWORD: password
